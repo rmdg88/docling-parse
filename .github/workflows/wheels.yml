@@ -36,9 +36,7 @@ jobs:
           
       - name: Install dependencies
         run: |
-          choco install cmake ninja --y
-          choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --y
-          # choco install mingw --y
+          choco install cmake ninja mingw --version=11.2.0
           
       - name: Load cached venv
         id: cached-pip-wheels
