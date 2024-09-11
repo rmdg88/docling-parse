@@ -82,8 +82,8 @@ jobs:
           CIBW_BUILD_VERBOSITY: 3
           CIBW_ARCHS: AMD64
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
-          CMAKE_C_COMPILER: "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\gcc.exe"
-          CMAKE_CXX_COMPILER: "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\g++.exe"
+          # CMAKE_C_COMPILER: ""
+          # CMAKE_CXX_COMPILER: ""
           CMAKE_GENERATOR: "MinGW Makefiles"
         shell: pwsh
         run: |
