@@ -36,10 +36,22 @@ jobs:
           
       - name: Install dependencies
         run: |
-          choco install cmake -y
-          choco install ninja -y
+          choco install cmake --version=3.30.3 -y
+          choco install ninja --version=1.12.1 -y
+          choco uninstall mingw -y
           choco install mingw --version=11.2.0 -y
           
+      - name: Set up MinGW environment variables
+        run: |
+          echo "Setting MinGW path"
+          setx PATH "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin;%PATH%"
+      
+      - name: Configure CMake with MinGW 11.2.0
+        run: |
+          cmake -B build -G Ninja ^
+            -DCMAKE_C_COMPILER=C:/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/bin/gcc.exe ^
+            -DCMAKE_CXX_COMPILER=C:/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/bin/g++.exe
+            
       - name: Load cached venv
         id: cached-pip-wheels
         uses: actions/cache@v4
