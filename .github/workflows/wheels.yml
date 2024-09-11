@@ -38,10 +38,7 @@ jobs:
         shell: pwsh
         run: |
           choco install pkgconfiglite -y
-          choco install mingw-w64 -y
-          echo "C:\Program Files\mingw-w64\mingw64\bin" >> $env:GITHUB_PATH
-          echo "C:\Program Files\mingw-w64\mingw64\include" >> $env:GITHUB_PATH
-          echo "C:\Program Files\mingw-w64\mingw64\lib" >> $env:GITHUB_PATH
+          choco install ninja -y
           powershell -Command "(Invoke-WebRequest -Uri https://git.io/JnHTY -OutFile install_zlib.bat)"; ./install_zlib.bat; del install_zlib.bat
           echo "C:\Program Files\zlib\bin" >> $env:GITHUB_PATH
           echo "C:\Program Files\zlib\include" >> $env:GITHUB_PATH
@@ -71,7 +68,7 @@ jobs:
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
           # CMAKE_C_COMPILER: ""
           # CMAKE_CXX_COMPILER: ""
-          CMAKE_GENERATOR: "MinGW Makefiles"
+          CMAKE_GENERATOR: "Ninja"
         shell: pwsh
         run: |
           # Install poetry dependencies
