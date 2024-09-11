@@ -67,6 +67,10 @@ jobs:
           export PIPX_HOME="${env:USERPROFILE}/.local/pipx"
           export PIPX_BIN_DIR="${env:USERPROFILE}/.local/bin"
           pipx install poetry==1.8.3 --python python
+        env:
+          # Ensure paths are set correctly
+          PIPX_HOME: "${{ env.USERPROFILE }}/.local/pipx"
+          PIPX_BIN_DIR: "${{ env.USERPROFILE }}/.local/bin"
         shell: bash
 
       - name: Test poetry
@@ -249,4 +253,3 @@ jobs:
         run: |
           ls -l ./dist
           poetry publish --dry-run --no-interaction -vvv
-
