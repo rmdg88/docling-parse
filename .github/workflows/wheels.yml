@@ -57,9 +57,8 @@ jobs:
           install: > 
             zlib 
             pkg-config
-
+            
       - name: Build wheels
-        # if: matrix.os.name == 'windows-latest'
         env:
           CIBW_PLATFORM: windows
           CIBW_BUILD_VERBOSITY: 3
@@ -74,11 +73,12 @@ jobs:
           # Verify the installations of pkg-config and zlib
           pkg-config --version
           ls C:/msys64/mingw64/include/zlib.h
-
+          
+          # Build the project
           C:\Users\runneradmin\.local\bin\poetry install --no-interaction --no-root --only=build
           C:\Users\runneradmin\.local\bin\poetry run python --version
           C:\Users\runneradmin\.local\bin\poetry run python -m cibuildwheel --output-dir .\wheelhouse
-          
+
       - name: Publish wheels (dry run)
         # if: matrix.os.name == 'windows-latest'
         shell: pwsh
