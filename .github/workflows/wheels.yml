@@ -36,7 +36,9 @@ jobs:
           
       - name: Install dependencies
         run: |
-          choco install cmake ninja --y
+          # choco install cmake ninja --y
+          choco install mingw --y
+          choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' --y
           
       - name: Load cached venv
         id: cached-pip-wheels
@@ -61,6 +63,7 @@ jobs:
           CIBW_ARCHS: AMD64
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
           # CMAKE_GENERATOR: "Ninja"
+          CMAKE_GENERATOR: "MinGW Makefiles"
         shell: pwsh
         run: |
           # Install poetry dependencies
