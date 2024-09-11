@@ -65,10 +65,9 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           update: true
-          install: zlib
-        shell: pwsh
-        run: |
-          choco install pkgconfiglite --yes
+          install: > 
+            zlib 
+            pkg-config
 
       - name: Build wheels
         # if: matrix.os.name == 'windows-latest'
@@ -78,7 +77,7 @@ jobs:
           # CIBW_BUILD: ${{ env.python_cp_version }}
           CIBW_ARCHS: AMD64
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
-          CMAKE_ARGS: "-DZLIB_ROOT=C:/ProgramData/chocolatey/lib/zlib/tools/zlib -DPKG_CONFIG_EXECUTABLE=C:/Program Files/pkg-config/bin/pkg-config.exe"
+          CMAKE_ARGS: "-DZLIB_ROOT=C:/msys64/usr -DPKG_CONFIG_EXECUTABLE=C:/msys64/usr/bin/pkg-config.exe"
         shell: pwsh
         run: |
           C:\Users\runneradmin\.local\bin\poetry install --no-interaction --no-root --only=build
