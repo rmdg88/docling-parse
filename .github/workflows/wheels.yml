@@ -33,13 +33,7 @@ jobs:
           version: 1.8.3
           virtualenvs-create: true
           virtualenvs-in-project: true
-          
-      - uses: msys2/setup-msys2@v2
-        with:
-            install: mingw-w64-x86_64-toolchain
-            msystem: mingw64
-            release: false
-            
+
       - name: Install dependencies
         shell: pwsh
         run: |
@@ -49,6 +43,7 @@ jobs:
           echo "C:\Program Files\zlib\bin" >> $env:GITHUB_PATH
           echo "C:\Program Files\zlib\include" >> $env:GITHUB_PATH
           echo "C:\Program Files\zlib\lib" >> $env:GITHUB_PATH
+          echo "C:\Users\runneradmin\.local\bin" >> $env:GITHUB_PATH
 
       - name: Load cached venv
         id: cached-pip-wheels
@@ -77,27 +72,16 @@ jobs:
           CMAKE_GENERATOR: "MinGW Makefiles"
         shell: pwsh
         run: |
-          # Install poetry dependencies
-          C:\Users\runneradmin\.local\bin\poetry install --no-interaction --no-root --only=build
-      
-          # Print Python version
-          C:\Users\runneradmin\.local\bin\poetry run python --version
-      
-          # Build wheels using cibuildwheel
-          C:\Users\runneradmin\.local\bin\poetry run python -m cibuildwheel --output-dir .\wheelhouse
-      
-          # Inspect each .whl file in the wheelhouse directory
+          # C:\Users\runneradmin\.local\bin\poetry install --no-interaction --no-root --only=build
+          poetry install --no-interaction --no-root --only=build
+          poetry run python -m cibuildwheel --output-dir .\wheelhouse
           Get-ChildItem -Path .\wheelhouse\*.whl | ForEach-Object {
             Write-Output "Inspecting $($_.FullName)"
-            C:\Users\runneradmin\.local\bin\poetry run python -m zipfile --list $_.FullName
+            poetry run python -m zipfile --list $_.FullName
           }
-      
-          # Create the dist directory if it does not exist
           if (-not (Test-Path -Path .\dist)) {
             New-Item -Path .\dist -ItemType Directory
           }
-      
-          # Copy all .whl files to the dist directory
           Copy-Item -Path .\wheelhouse\*.whl -Destination .\dist\
 
       - name: Publish wheels (dry run)
@@ -105,4 +89,4 @@ jobs:
         shell: pwsh
         run: |
           ls -l .\dist
-          C:\Users\runneradmin\.local\bin\poetry publish --dry-run --no-interaction -vvv
+          poetry publish --dry-run --no-interaction -vvv
