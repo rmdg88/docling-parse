@@ -67,7 +67,7 @@ jobs:
           CIBW_PLATFORM: windows
           CIBW_BUILD_VERBOSITY: 3
           # CIBW_BUILD: ${{ env.python_cp_version }}
-          CIBW_ARCHS: x86_64
+          CIBW_ARCHS: AMD64
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
         shell: pwsh
         run: |
