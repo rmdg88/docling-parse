@@ -62,9 +62,13 @@ jobs:
           Add-Content -Path $env:GITHUB_ENV -Value "python_cp_version=$cp_version"
 
       - name: Install dependencies
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: zlib
         shell: pwsh
         run: |
-          choco install zlib pkgconfiglite --yes
+          choco install pkgconfiglite --yes
 
       - name: Build wheels
         # if: matrix.os.name == 'windows-latest'
@@ -87,3 +91,4 @@ jobs:
         run: |
           ls -l ./dist
           C:\Users\runneradmin\.local\bin\poetry publish --dry-run --no-interaction -vvv
+
