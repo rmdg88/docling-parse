@@ -63,21 +63,22 @@ jobs:
         env:
           CIBW_PLATFORM: windows
           CIBW_BUILD_VERBOSITY: 3
-          # CIBW_BUILD: ${{ env.python_cp_version }}
           CIBW_ARCHS: AMD64
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
-          CMAKE_ARGS: "-DZLIB_ROOT=C:/msys64/usr -DZLIB_LIBRARY=C:/msys64/usr/lib/libz.a -DZLIB_INCLUDE_DIR=C:/msys64/usr/include -DPKG_CONFIG_EXECUTABLE=C:/msys64/usr/bin/pkg-config.exe"
+          CMAKE_ARGS: "-DZLIB_ROOT=C:/msys64/mingw64 -DZLIB_LIBRARY=C:/msys64/mingw64/lib/libz.a -DZLIB_INCLUDE_DIR=C:/msys64/mingw64/include -DPKG_CONFIG_EXECUTABLE=C:/msys64/usr/bin/pkg-config.exe"
         shell: pwsh
         run: |
           # Ensure MSYS2 paths are in the environment
-          $env:Path += ";C:/msys64/usr/bin"
+          $env:Path += ";C:/msys64/mingw64/bin;C:/msys64/usr/bin"
+          
           # Verify the installations of pkg-config and zlib
           pkg-config --version
-          ls C:/msys64/usr/include/zlib.h
+          ls C:/msys64/mingw64/include/zlib.h
+
           C:\Users\runneradmin\.local\bin\poetry install --no-interaction --no-root --only=build
           C:\Users\runneradmin\.local\bin\poetry run python --version
           C:\Users\runneradmin\.local\bin\poetry run python -m cibuildwheel --output-dir .\wheelhouse
-
+          
       - name: Publish wheels (dry run)
         # if: matrix.os.name == 'windows-latest'
         shell: pwsh
