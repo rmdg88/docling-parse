@@ -61,6 +61,11 @@ jobs:
           $cp_version = "cp$($version -replace '\.', '')"
           Add-Content -Path $env:GITHUB_ENV -Value "python_cp_version=$cp_version"
 
+      - name: Install dependencies
+        shell: pwsh
+        run: |
+          choco install zlib pkgconfiglite --yes
+
       - name: Build wheels
         # if: matrix.os.name == 'windows-latest'
         env:
@@ -69,12 +74,9 @@ jobs:
           # CIBW_BUILD: ${{ env.python_cp_version }}
           CIBW_ARCHS: AMD64
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
+          CMAKE_ARGS: "-DZLIB_ROOT=C:/ProgramData/chocolatey/lib/zlib/tools/zlib -DPKG_CONFIG_EXECUTABLE=C:/Program Files/pkg-config/bin/pkg-config.exe"
         shell: pwsh
         run: |
-          Set-ExecutionPolicy Bypass -Scope Process -Force; 
-          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; 
-          iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-          choco install zlib
           C:\Users\runneradmin\.local\bin\poetry install --no-interaction --no-root --only=build
           C:\Users\runneradmin\.local\bin\poetry run python --version
           C:\Users\runneradmin\.local\bin\poetry run python -m cibuildwheel --output-dir .\wheelhouse
@@ -85,4 +87,3 @@ jobs:
         run: |
           ls -l ./dist
           C:\Users\runneradmin\.local\bin\poetry publish --dry-run --no-interaction -vvv
-
