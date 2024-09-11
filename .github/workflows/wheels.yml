@@ -39,15 +39,27 @@ jobs:
           choco install cmake --version=3.30.3 -y
           #choco install ninja --version=1.12.1 -y
           choco install mingw --version=11.2.0 -y
-          
-      - name: Set up MinGW environment variables and check versions
+
+      - name: Set MinGW Path and Configure CMake
+        shell: pwsh
         run: |
-          echo "Setting MinGW path"
-          setx PATH "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin;%PATH%"
+          # Ensure MinGW is in the PATH
+          $env:PATH = "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin;" + $env:PATH
+          [Environment]::SetEnvironmentVariable("PATH", $env:PATH, "User")
+      
+          # Set the CMake generator and compilers
+          $env:CMAKE_GENERATOR = "MinGW Makefiles"
+          $env:CMAKE_C_COMPILER = "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\gcc.exe"
+          $env:CMAKE_CXX_COMPILER = "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\g++.exe"
+          [Environment]::SetEnvironmentVariable("CMAKE_GENERATOR", $env:CMAKE_GENERATOR, "User")
+          [Environment]::SetEnvironmentVariable("CMAKE_C_COMPILER", $env:CMAKE_C_COMPILER, "User")
+          [Environment]::SetEnvironmentVariable("CMAKE_CXX_COMPILER", $env:CMAKE_CXX_COMPILER, "User")
+      
+          # Verify compiler versions
           gcc --version
-          cmake --version
           g++ --version
-            
+          cmake --version
+
       - name: Load cached venv
         id: cached-pip-wheels
         uses: actions/cache@v4
@@ -70,7 +82,8 @@ jobs:
           CIBW_BUILD_VERBOSITY: 3
           CIBW_ARCHS: AMD64
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
-          # CMAKE_GENERATOR: "Ninja"
+          CMAKE_C_COMPILER: "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\gcc.exe"
+          CMAKE_CXX_COMPILER: "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\g++.exe"
           CMAKE_GENERATOR: "MinGW Makefiles"
         shell: pwsh
         run: |
