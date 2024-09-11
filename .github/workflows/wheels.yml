@@ -30,6 +30,13 @@ jobs:
           virtualenvs-create: true
           virtualenvs-in-project: true
 
+      - name: Add Poetry to PATH
+        shell: pwsh
+        run: |
+          $env:PATH = "$env:PATH;C:\Users\runneradmin\.local\bin"
+          [System.IO.File]::WriteAllText("C:\Users\runneradmin\setup_path.ps1", "Write-Host `$env:PATH")
+          Write-Host $env:PATH
+
       - name: Load cached venv
         id: cached-pip-wheels
         uses: actions/cache@v4
@@ -39,6 +46,7 @@ jobs:
 
       - name: Install dependencies
         run: poetry install --no-interaction --no-root --only=build
+        shell: pwsh
 
       - name: Convert Python version to cpXYZ
         shell: pwsh
