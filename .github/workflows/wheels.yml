@@ -40,12 +40,12 @@ jobs:
       #     key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
       - name: Install dependencies
-        if: matrix.os.name == 'windows-latest'
+        # if: matrix.os.name == 'windows-latest'
         run: C:\Users\runneradmin\.local\bin\poetry install --no-interaction --no-root --only=build
         shell: pwsh
 
       - name: Convert Python version to cpXYZ
-        if: matrix.os.name == 'windows-latest'
+        # if: matrix.os.name == 'windows-latest'
         shell: pwsh
         run: |
           $version = "${{ matrix.python-version }}"
@@ -54,7 +54,7 @@ jobs:
           Write-Host "The value of python_cp_version is: $env:python_cp_version"
 
       - name: Build wheels
-        if: matrix.os.name == 'windows-latest'
+        # if: matrix.os.name == 'windows-latest'
         env:
           CIBW_PLATFORM: windows
           CIBW_BUILD_VERBOSITY: 3
@@ -70,7 +70,7 @@ jobs:
           Copy-Item -Path wheelhouse\*.whl -Destination .\dist\
 
       - name: Publish wheels (dry run)
-        if: matrix.os.name == 'windows-latest'
+        # if: matrix.os.name == 'windows-latest'
         run: |
           ls -l ./dist
           C:\Users\runneradmin\.local\bin\poetry publish --dry-run --no-interaction -vvv
