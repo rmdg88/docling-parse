@@ -37,7 +37,7 @@ jobs:
       - name: Install dependencies
         run: |
           choco install cmake --version=3.30.3 -y
-          choco install ninja --version=1.12.1 -y
+          #choco install ninja --version=1.12.1 -y
           choco install mingw --version=11.2.0 -y
           
       - name: Set up MinGW environment variables and check versions
@@ -70,8 +70,8 @@ jobs:
           CIBW_BUILD_VERBOSITY: 3
           CIBW_ARCHS: AMD64
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
-          CMAKE_GENERATOR: "Ninja"
-          # CMAKE_GENERATOR: "MinGW Makefiles"
+          # CMAKE_GENERATOR: "Ninja"
+          CMAKE_GENERATOR: "MinGW Makefiles"
         shell: pwsh
         run: |
           # Install poetry dependencies
