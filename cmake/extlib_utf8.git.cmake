@@ -1,4 +1,3 @@
-
 message(STATUS "entering in extlib_utf8.cmake")
 
 include(ExternalProject)
@@ -20,9 +19,13 @@ ExternalProject_Add(extlib_utf8
     BUILD_ALWAYS OFF
 
     INSTALL_DIR     ${EXTERNALS_PREFIX_PATH}
-    INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory <SOURCE_DIR>/source ${EXTERNALS_PREFIX_PATH}/include/utf8
-    )
+    # Use the correct source directory variable for the copy command
+    INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory ${extlib_utf8_SOURCE_DIR}/source ${EXTERNALS_PREFIX_PATH}/include/utf8
+)
 
+# Add utf8 as an interface library (header-only)
 add_library(utf8 INTERFACE)
+
+# Ensure extlib_utf8 is built before using utf8
 add_custom_target(install_extlib_utf8 DEPENDS extlib_utf8)
 add_dependencies(utf8 install_extlib_utf8)
