@@ -71,13 +71,16 @@ jobs:
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
         shell: pwsh
         run: |
+          @powershell -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+          choco install zlib
           C:\Users\runneradmin\.local\bin\poetry install --no-interaction --no-root --only=build
           C:\Users\runneradmin\.local\bin\poetry run python --version
           C:\Users\runneradmin\.local\bin\poetry run python -m cibuildwheel --output-dir .\wheelhouse
 
       - name: Publish wheels (dry run)
         # if: matrix.os.name == 'windows-latest'
+        shell: pwsh
         run: |
           ls -l ./dist
           C:\Users\runneradmin\.local\bin\poetry publish --dry-run --no-interaction -vvv
-        shell: pwsh
+
