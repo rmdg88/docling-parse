@@ -18,8 +18,7 @@ Date: 18/08/2017
 //#ifdef __HAVE_QPDF
 
 #define POINTERHOLDER_TRANSITION 0
-// ??
-//#include <qpdf/QPDF.hh>
+#include <qpdf/QPDF.hh>
 
 //#endif
 
