@@ -14,7 +14,7 @@ jobs:
         python-version: ["3.11"]
 
         os:
-          - name: "windows-latest"
+          - name: "windows-2019"
             platform: "windows"
             platform_id: "win_amd64"
             
@@ -36,7 +36,7 @@ jobs:
           
       - name: Install dependencies
         run: |
-          choco install cmake --version=3.30.3 -y
+          # choco install cmake --version=3.30.3 -y
           # choco install ninja --version=1.12.1 -y
           # choco install mingw --version=11.2.0 -y
 
