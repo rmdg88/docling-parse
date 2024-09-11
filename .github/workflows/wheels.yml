@@ -8,10 +8,7 @@ jobs:
   build_wheels:
     name: Build wheel for py${{ matrix.python-version }} ${{ matrix.os.platform_id }}
     runs-on: ${{ matrix.os.name }}
-
     strategy:
-      # Ensure that a wheel builder finishes even if another fails
-      # list of github vm: https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories
       fail-fast: false
       matrix:
         python-version: ["3.10"]
@@ -20,9 +17,7 @@ jobs:
           - name: "windows-latest"
             platform: "windows"
             platform_id: "win_amd64"
-
-# if: matrix.os.name == 'ubuntu-latest' || matrix.os.name == 'macos-latest'
-# if: matrix.os.name == 'windows-latest'
+            
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,7 +34,6 @@ jobs:
           virtualenvs-create: true
           virtualenvs-in-project: true
 
-
       - name: Load cached venv
         id: cached-pip-wheels
         uses: actions/cache@v4
@@ -47,11 +41,6 @@ jobs:
           # Set the path based on the operating system
           path: ${{ runner.os == 'Windows' && 'C:\\Users\\runneradmin\\AppData\\Local\\pypa\\cibuildwheel\\Cache' || '~/.cache' }}
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
-
-      # - name: Install dependencies
-      #   # if: matrix.os.name == 'windows-latest'
-      #   run: C:\Users\runneradmin\.local\bin\poetry install --no-interaction --no-root --only=build
-      #   shell: pwsh
 
       - name: Convert Python version to cpXYZ
         # if: matrix.os.name == 'windows-latest'
@@ -77,9 +66,14 @@ jobs:
           # CIBW_BUILD: ${{ env.python_cp_version }}
           CIBW_ARCHS: AMD64
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
-          CMAKE_ARGS: "-DZLIB_ROOT=C:/msys64/usr -DPKG_CONFIG_EXECUTABLE=C:/msys64/usr/bin/pkg-config.exe"
+          CMAKE_ARGS: "-DZLIB_ROOT=C:/msys64/usr -DZLIB_LIBRARY=C:/msys64/usr/lib/libz.a -DZLIB_INCLUDE_DIR=C:/msys64/usr/include -DPKG_CONFIG_EXECUTABLE=C:/msys64/usr/bin/pkg-config.exe"
         shell: pwsh
         run: |
+          # Ensure MSYS2 paths are in the environment
+          $env:Path += ";C:/msys64/usr/bin"
+          # Verify the installations of pkg-config and zlib
+          pkg-config --version
+          ls C:/msys64/usr/include/zlib.h
           C:\Users\runneradmin\.local\bin\poetry install --no-interaction --no-root --only=build
           C:\Users\runneradmin\.local\bin\poetry run python --version
           C:\Users\runneradmin\.local\bin\poetry run python -m cibuildwheel --output-dir .\wheelhouse
@@ -90,4 +84,3 @@ jobs:
         run: |
           ls -l ./dist
           C:\Users\runneradmin\.local\bin\poetry publish --dry-run --no-interaction -vvv
-
