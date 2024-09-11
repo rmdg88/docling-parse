@@ -63,9 +63,28 @@ jobs:
           CMAKE_GENERATOR: "Ninja"
         shell: pwsh
         run: |
+          # Install poetry dependencies
           C:\Users\runneradmin\.local\bin\poetry install --no-interaction --no-root --only=build
+      
+          # Print Python version
           C:\Users\runneradmin\.local\bin\poetry run python --version
+      
+          # Build wheels using cibuildwheel
           C:\Users\runneradmin\.local\bin\poetry run python -m cibuildwheel --output-dir .\wheelhouse
+      
+          # Inspect each .whl file in the wheelhouse directory
+          Get-ChildItem -Path .\wheelhouse\*.whl | ForEach-Object {
+            Write-Output "Inspecting $($_.FullName)"
+            C:\Users\runneradmin\.local\bin\poetry run python -m zipfile --list $_.FullName
+          }
+      
+          # Create the dist directory if it does not exist
+          if (-not (Test-Path -Path .\dist)) {
+            New-Item -Path .\dist -ItemType Directory
+          }
+      
+          # Copy all .whl files to the dist directory
+          Copy-Item -Path .\wheelhouse\*.whl -Destination .\dist\
 
       - name: Publish wheels (dry run)
         # if: matrix.os.name == 'windows-latest'
