@@ -30,13 +30,6 @@ jobs:
           virtualenvs-create: true
           virtualenvs-in-project: true
 
-      - name: Add Poetry to PATH
-        shell: pwsh
-        run: |
-          $env:PATH = "$env:PATH;C:\Users\runneradmin\.local\bin"
-          [System.IO.File]::WriteAllText("C:\Users\runneradmin\setup_path.ps1", "Write-Host `$env:PATH")
-          Write-Host $env:PATH
-
       - name: Load cached venv
         id: cached-pip-wheels
         uses: actions/cache@v4
@@ -45,7 +38,7 @@ jobs:
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
       - name: Install dependencies
-        run: poetry install --no-interaction --no-root --only=build
+        run: C:\Users\runneradmin\.local\bin\poetry install --no-interaction --no-root --only=build
         shell: pwsh
 
       - name: Convert Python version to cpXYZ
@@ -62,8 +55,8 @@ jobs:
         shell: pwsh
         run: |
           Write-Host "Building wheel on Windows"
-          poetry run python --version
-          poetry run python -m cibuildwheel --output-dir ./wheelhouse
+          C:\Users\runneradmin\.local\bin\poetry run python --version
+          C:\Users\runneradmin\.local\bin\poetry run python -m cibuildwheel --output-dir ./wheelhouse
           # Create the output directory
           New-Item -Path .\dist -ItemType Directory -Force
           # Copy the wheels to the dist directory
@@ -72,5 +65,5 @@ jobs:
       - name: Publish wheels (dry run)
         run: |
           ls -l ./dist
-          poetry publish --dry-run --no-interaction -vvv
+          C:\Users\runneradmin\.local\bin\poetry publish --dry-run --no-interaction -vvv
         shell: pwsh
