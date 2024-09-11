@@ -33,11 +33,19 @@ jobs:
           virtualenvs-in-project: true
 
       # - name: Load cached venv
+      #   # if: matrix.os.name == 'windows-latest'
       #   id: cached-pip-wheels
       #   uses: actions/cache@v4
       #   with:
       #     path: ~/.cache
       #     key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+      - name: Load cached venv
+        id: cached-pip-wheels
+        uses: actions/cache@v4
+        with:
+          # Set the path based on the operating system
+          path: ${{ runner.os == 'Windows' && 'C:\\Users\\runneradmin\\AppData\\Local\\pypa\\cibuildwheel\\Cache' || '~/.cache' }}
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
       - name: Install dependencies
         # if: matrix.os.name == 'windows-latest'
@@ -51,7 +59,6 @@ jobs:
           $version = "${{ matrix.python-version }}"
           $cp_version = "cp$($version -replace '\.', '')"
           Add-Content -Path $env:GITHUB_ENV -Value "python_cp_version=$cp_version"
-          Write-Host "The value of python_cp_version is: $env:python_cp_version"
 
       - name: Build wheels
         # if: matrix.os.name == 'windows-latest'
@@ -62,13 +69,16 @@ jobs:
         shell: pwsh
         run: |
           Write-Host "Building wheel on Windows"
-          C:\Users\runneradmin\.local\bin\poetry run python --version
-          C:\Users\runneradmin\.local\bin\poetry run python -m cibuildwheel --output-dir ./wheelhouse
-          # Create the output directory
-          New-Item -Path .\dist -ItemType Directory -Force
-          # Copy the wheels to the dist directory
-          Copy-Item -Path wheelhouse\*.whl -Destination .\dist\
-
+          poetry run python --version
+          poetry run python -m cibuildwheel --output-dir ./wheelhouse
+          # Ensure that the wheelhouse directory exists before copying
+          if (Test-Path -Path ./wheelhouse) {
+              Write-Host "Copying wheels to dist directory"
+              New-Item -Path .\dist -ItemType Directory -Force
+              Copy-Item -Path wheelhouse\*.whl -Destination .\dist\
+          } else {
+              Write-Host "Directory wheelhouse does not exist."
+          }
       - name: Publish wheels (dry run)
         # if: matrix.os.name == 'windows-latest'
         run: |
