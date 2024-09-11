@@ -55,8 +55,8 @@ jobs:
         with:
           update: true
           install: > 
-            zlib 
-            pkg-config
+            mingw-w64-x86_64-zlib 
+            mingw-w64-x86_64-pkgconf
             
       - name: Build wheels
         env:
@@ -64,16 +64,15 @@ jobs:
           CIBW_BUILD_VERBOSITY: 3
           CIBW_ARCHS: AMD64
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
-          CMAKE_ARGS: "-DZLIB_ROOT=C:/msys64/mingw64 -DZLIB_LIBRARY=C:/msys64/mingw64/lib/libz.a -DZLIB_INCLUDE_DIR=C:/msys64/mingw64/include -DPKG_CONFIG_EXECUTABLE=C:/msys64/usr/bin/pkg-config.exe"
+          CMAKE_ARGS: "-DZLIB_ROOT=C:/msys64/mingw64 -DZLIB_LIBRARY=C:/msys64/mingw64/lib/libz.a -DZLIB_INCLUDE_DIR=C:/msys64/mingw64/include -DPKG_CONFIG_EXECUTABLE=C:/msys64/mingw64/bin/pkg-config.exe"
         shell: pwsh
         run: |
-          # Ensure MSYS2 paths are in the environment
           $env:Path += ";C:/msys64/mingw64/bin;C:/msys64/usr/bin"
-          
+          pkg-config --version
+          ls C:/msys64/mingw64/include/zlib.h
           # Verify the installations of pkg-config and zlib
           pkg-config --version
           ls C:/msys64/mingw64/include/zlib.h
-          
           # Build the project
           C:\Users\runneradmin\.local\bin\poetry install --no-interaction --no-root --only=build
           C:\Users\runneradmin\.local\bin\poetry run python --version
