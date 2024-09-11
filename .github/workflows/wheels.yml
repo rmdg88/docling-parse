@@ -54,10 +54,21 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install poetry
+      - name: Install poetry [linux/macos]
+        if: matrix.os.platform == 'linux' || matrix.os.platform == 'macos'
         run: pipx install poetry==1.8.3 --python $(which python3)
         shell: bash
-  
+
+      - name: Install Poetry [Windows]
+        if: matrix.os.platform == 'windows'
+        run: |
+          pip install pipx
+          # Override PIPX_HOME and PIPX_BIN_DIR to avoid spaces in the path
+          export PIPX_HOME="${env:USERPROFILE}/.local/pipx"
+          export PIPX_BIN_DIR="${env:USERPROFILE}/.local/bin"
+          pipx install poetry==1.8.3 --python python
+        shell: bash
+
       - name: Test poetry
         run: |
           poetry run python --version
