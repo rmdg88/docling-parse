@@ -58,6 +58,10 @@ jobs:
             mingw-w64-x86_64-zlib 
             mingw-w64-x86_64-pkgconf
             
+      - name: Verify zlib installation
+        run: |
+          C:/msys64/usr/bin/bash -lc "pacman -Ql mingw-w64-x86_64-zlib | grep 'zlib.h'"
+
       - name: Build wheels
         env:
           CIBW_PLATFORM: windows
@@ -67,13 +71,6 @@ jobs:
           CMAKE_ARGS: "-DZLIB_ROOT=C:/msys64/mingw64 -DZLIB_LIBRARY=C:/msys64/mingw64/lib/libz.a -DZLIB_INCLUDE_DIR=C:/msys64/mingw64/include -DPKG_CONFIG_EXECUTABLE=C:/msys64/mingw64/bin/pkg-config.exe"
         shell: pwsh
         run: |
-          $env:Path += ";C:/msys64/mingw64/bin;C:/msys64/usr/bin"
-          pkg-config --version
-          ls C:/msys64/mingw64/include/zlib.h
-          # Verify the installations of pkg-config and zlib
-          pkg-config --version
-          ls C:/msys64/mingw64/include/zlib.h
-          # Build the project
           C:\Users\runneradmin\.local\bin\poetry install --no-interaction --no-root --only=build
           C:\Users\runneradmin\.local\bin\poetry run python --version
           C:\Users\runneradmin\.local\bin\poetry run python -m cibuildwheel --output-dir .\wheelhouse
