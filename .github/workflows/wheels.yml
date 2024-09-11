@@ -34,12 +34,13 @@ jobs:
           virtualenvs-create: true
           virtualenvs-in-project: true
           
-      - name: Install dependencies1
+      - uses: msys2/setup-msys2@v2
         with:
             install: mingw-w64-x86_64-toolchain
             msystem: mingw64
+            release: false
             
-      - name: Install dependencies2
+      - name: Install dependencies
         shell: pwsh
         run: |
           # choco install pkgconfiglite -y
