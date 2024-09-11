@@ -7,13 +7,19 @@ env:
 jobs:
   build_wheels:
     name: Build wheel for py${{ matrix.python-version }} ${{ matrix.os.platform_id }}
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os.name }}
 
     strategy:
+      # Ensure that a wheel builder finishes even if another fails
+      # list of github vm: https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories
       fail-fast: false
       matrix:
         python-version: ["3.10"]
-        architecture: 'x64'
+
+        os:
+          - name: "windows-latest"
+            platform: "windows"
+            platform_id: "win_amd64"
 
 # if: matrix.os.name == 'ubuntu-latest' || matrix.os.name == 'macos-latest'
 # if: matrix.os.name == 'windows-latest'
