@@ -52,7 +52,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          choco install ninja cmake
+          choco install ninja cmake --y
+          python -m pip install --upgrade pip
+          pip install cibuildwheel
           
       - name: Build wheels
         env:
@@ -90,5 +92,5 @@ jobs:
         # if: matrix.os.name == 'windows-latest'
         shell: pwsh
         run: |
-          ls -l ./dist
+          ls -l .\dist
           C:\Users\runneradmin\.local\bin\poetry publish --dry-run --no-interaction -vvv
