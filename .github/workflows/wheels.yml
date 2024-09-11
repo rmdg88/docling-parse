@@ -47,10 +47,10 @@ jobs:
           path: ${{ runner.os == 'Windows' && 'C:\\Users\\runneradmin\\AppData\\Local\\pypa\\cibuildwheel\\Cache' || '~/.cache' }}
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
-      - name: Install dependencies
-        # if: matrix.os.name == 'windows-latest'
-        run: C:\Users\runneradmin\.local\bin\poetry install --no-interaction --no-root --only=build
-        shell: pwsh
+      # - name: Install dependencies
+      #   # if: matrix.os.name == 'windows-latest'
+      #   run: C:\Users\runneradmin\.local\bin\poetry install --no-interaction --no-root --only=build
+      #   shell: pwsh
 
       - name: Convert Python version to cpXYZ
         # if: matrix.os.name == 'windows-latest'
@@ -69,7 +69,7 @@ jobs:
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
         shell: pwsh
         run: |
-          mkdir .\wheelhouse
+          C:\Users\runneradmin\.local\bin\poetry install --no-interaction --no-root --only=build
           C:\Users\runneradmin\.local\bin\poetry run python --version
           C:\Users\runneradmin\.local\bin\poetry run python -m cibuildwheel --output-dir .\wheelhouse
 
