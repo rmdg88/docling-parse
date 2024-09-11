@@ -37,24 +37,9 @@ jobs:
       - name: Install dependencies
         run: |
           choco install cmake --version=3.30.3 -y
-          #choco install ninja --version=1.12.1 -y
-          choco install mingw --version=11.2.0 -y
+          # choco install ninja --version=1.12.1 -y
+          # choco install mingw --version=11.2.0 -y
 
-      - name: Set MinGW Path and Configure CMake
-        shell: pwsh
-        run: |
-          # Ensure MinGW is in the PATH
-          $env:PATH = "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin;" + $env:PATH
-          [Environment]::SetEnvironmentVariable("PATH", $env:PATH, "User")
-      
-          # Set the CMake generator and compilers
-          $env:CMAKE_GENERATOR = "MinGW Makefiles"
-          $env:CMAKE_C_COMPILER = "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\gcc.exe"
-          $env:CMAKE_CXX_COMPILER = "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\g++.exe"
-          [Environment]::SetEnvironmentVariable("CMAKE_GENERATOR", $env:CMAKE_GENERATOR, "User")
-          [Environment]::SetEnvironmentVariable("CMAKE_C_COMPILER", $env:CMAKE_C_COMPILER, "User")
-          [Environment]::SetEnvironmentVariable("CMAKE_CXX_COMPILER", $env:CMAKE_CXX_COMPILER, "User")
-      
           # Verify compiler versions
           gcc --version
           g++ --version
@@ -84,7 +69,7 @@ jobs:
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
           # CMAKE_C_COMPILER: ""
           # CMAKE_CXX_COMPILER: ""
-          CMAKE_GENERATOR: "MinGW Makefiles"
+          # CMAKE_GENERATOR: ""
         shell: pwsh
         run: |
           # Install poetry dependencies
