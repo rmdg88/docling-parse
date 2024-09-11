@@ -14,7 +14,8 @@ jobs:
         python-version: ["3.11"]
 
         os:
-          - name: "windows-2019"
+          - name: "windows-latest"
+          #- name: "windows-2019"
             platform: "windows"
             platform_id: "win_amd64"
             
@@ -37,8 +38,8 @@ jobs:
       - name: Install dependencies
         shell: pwsh
         run: |
-          # choco install pkgconfiglite -y
-          # choco install ninja -y
+          choco install pkgconfiglite -y
+          choco install ninja -y
           powershell -Command "(Invoke-WebRequest -Uri https://git.io/JnHTY -OutFile install_zlib.bat)"; ./install_zlib.bat; del install_zlib.bat
           echo "C:\Program Files\zlib\bin" >> $env:GITHUB_PATH
           echo "C:\Program Files\zlib\include" >> $env:GITHUB_PATH
