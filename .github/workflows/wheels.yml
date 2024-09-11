@@ -37,11 +37,12 @@ jobs:
       - name: Install dependencies
         shell: pwsh
         run: |
-          choco install pkgconfig-lite mingw  -y
+          choco install pkgconfiglite -y
+          choco install mingw --version=8.1.0 -y
           powershell -Command "(Invoke-WebRequest -Uri https://git.io/JnHTY -OutFile install_zlib.bat)"; ./install_zlib.bat; del install_zlib.bat
-          echo "C:\Program Files\zlib\bin" >> $env:GITHUB_PATH
-          echo "C:\Program Files\zlib\include" >> $env:GITHUB_PATH
-          echo "C:\Program Files\zlib\lib" >> $env:GITHUB_PATH
+          echo "C:\Program Files\mingw-w64\mingw64\bin" >> $env:GITHUB_PATH
+          echo "C:\Program Files\mingw-w64\mingw64\include" >> $env:GITHUB_PATH
+          echo "C:\Program Files\mingw-w64\mingw64\lib" >> $env:GITHUB_PATH
 
       - name: Load cached venv
         id: cached-pip-wheels
