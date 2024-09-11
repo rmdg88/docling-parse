@@ -66,12 +66,12 @@ jobs:
           CIBW_PLATFORM: windows
           CIBW_BUILD_VERBOSITY: 3
           CIBW_BUILD: ${{ env.python_cp_version }}
+          CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
         shell: pwsh
         run: |
-          Write-Host "Building wheel on Windows"
           C:\Users\runneradmin\.local\bin\poetry run python --version
           C:\Users\runneradmin\.local\bin\poetry run python -m cibuildwheel --output-dir .\wheelhouse
-          
+
       - name: Publish wheels (dry run)
         # if: matrix.os.name == 'windows-latest'
         run: |
