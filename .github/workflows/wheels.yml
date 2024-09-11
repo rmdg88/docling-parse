@@ -58,9 +58,9 @@ jobs:
             mingw-w64-x86_64-zlib 
             mingw-w64-x86_64-pkgconf
             
-      - name: Verify zlib installation
+      - name: List available zlib packages
         run: |
-          C:/msys64/usr/bin/bash -lc "pacman -Ql mingw-w64-x86_64-zlib | grep 'zlib.h'"
+          C:/msys64/usr/bin/bash -lc "pacman -Ss zlib"
 
       - name: Build wheels
         env:
