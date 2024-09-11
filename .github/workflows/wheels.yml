@@ -69,8 +69,8 @@ jobs:
         shell: pwsh
         run: |
           Write-Host "Building wheel on Windows"
-          poetry run python --version
-          poetry run python -m cibuildwheel --output-dir ./wheelhouse
+          C:\Users\runneradmin\.local\bin\poetry run python --version
+          C:\Users\runneradmin\.local\bin\poetry run python -m cibuildwheel --output-dir ./wheelhouse
           # Ensure that the wheelhouse directory exists before copying
           if (Test-Path -Path ./wheelhouse) {
               Write-Host "Copying wheels to dist directory"
