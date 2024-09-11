@@ -60,7 +60,6 @@ jobs:
           CIBW_BUILD_VERBOSITY: 3
           CIBW_ARCHS: AMD64
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
-          CMAKE_ARGS: "-DZLIB_ROOT=C:/msys64/mingw64 -DZLIB_LIBRARY=C:/msys64/mingw64/lib/libz.a -DZLIB_INCLUDE_DIR=C:/msys64/mingw64/include -DPKG_CONFIG_EXECUTABLE=C:/msys64/mingw64/bin/pkg-config.exe"
           CMAKE_GENERATOR: "Ninja"
         shell: pwsh
         run: |
