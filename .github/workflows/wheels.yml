@@ -53,7 +53,6 @@ jobs:
       - name: Download and Extract External Libs
         shell: pwsh
         run: |
-          mkdir D:\a\docling-parse\docling-parse
           $zipPath = '.\qpdf-external-libs-bin.zip'
           $extractPath = 'D:\a\docling-parse\docling-parse\'
           curl -sSL -o $zipPath 'https://github.com/qpdf/external-libs/releases/download/release-2024-06-07/qpdf-external-libs-bin.zip'
