@@ -53,7 +53,6 @@ jobs:
         shell: pwsh
         run: |
           echo "C:\Users\runneradmin\.local\bin" >> $env:GITHUB_PATH
-          echo "C:\msys64\usr\bin;C:\msys64\mingw64\bin" >> $env:GITHUB_PATH
           $version = "${{ matrix.python-version }}"
           $cp_version = "cp$($version -replace '\.', '')"
           Add-Content -Path $env:GITHUB_ENV -Value "python_cp_version=$cp_version"
@@ -67,9 +66,10 @@ jobs:
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
           CMAKE_PREFIX_PATH: "C:/msys64/mingw64"
           PKG_CONFIG_PATH: "C:/msys64/mingw64/lib/pkgconfig"
-          BUILD_THREADS: 2
+          BUILD_THREADS: 1
         shell: cmd
         run: |
+          setx PATH "%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
           if exist C:\Strawberry rmdir /s /q C:\Strawberry
           echo Building wheels...
           poetry install --no-interaction --no-root --only=build
