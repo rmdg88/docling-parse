@@ -41,7 +41,7 @@ jobs:
           install: >
             mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-zlib
-            mingw-w64-nasm
+            mingw-w64-x86_64-nasm
 
       - name: Convert Python version to cpXYZ and set paths
         shell: pwsh
@@ -61,6 +61,7 @@ jobs:
           CMAKE_LIBRARY_PATH: "C:/msys64/mingw64/lib" 
           CMAKE_INCLUDE_PATH: "C:/msys64/mingw64/include"
           CMAKE_GENERATOR: "MSYS Makefiles"
+          CMAKE_ASM_NASM_COMPILER: "C:/msys64/mingw64/bin/nasm.exe"
           BUILD_THREADS: 1
         shell: cmd
         run: |
