@@ -60,11 +60,6 @@ jobs:
           # Download the zip file using curl
           curl -sSL -o $zipPath 'https://github.com/qpdf/external-libs/releases/download/release-2024-06-07/qpdf-external-libs-bin.zip'
 
-          # Create extraction directory if it doesn't exist
-          if (-not (Test-Path $extractPath)) {
-              New-Item -Path $extractPath -ItemType Directory
-          }
-
           # Extract the zip file
           Expand-Archive -Path $zipPath -DestinationPath $extractPath -Force
 
