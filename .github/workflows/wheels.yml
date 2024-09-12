@@ -14,7 +14,7 @@ jobs:
         python-version: ["3.11"]
 
         os:
-          - name: "windows-2022"
+          - name: "windows-2019"
             platform: "windows"
             platform_id: "win_amd64"
             
@@ -61,7 +61,7 @@ jobs:
           CIBW_BUILD_VERBOSITY: 3
           CIBW_ARCHS: AMD64
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
-          CMAKE_PREFIX_PATH: "C:/msys64/mingw64"
+          # CMAKE_PREFIX_PATH: "C:/msys64/mingw64"
           PKG_CONFIG_PATH: "C:/msys64/mingw64/lib/pkgconfig"
           BUILD_THREADS: 1
           CMAKE_GENERATOR: "MinGW Makefiles"
