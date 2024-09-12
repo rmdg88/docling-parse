@@ -35,13 +35,15 @@ jobs:
           virtualenvs-create: true
           virtualenvs-in-project: true
 
-      - name: Convert Python version to cpXYZ
+      - name: Convert Python version to cpXYZ and set paths
         # if: matrix.os.name == 'windows-latest'
         shell: pwsh
         run: |
-          # adds poetry path
           echo "C:\Users\runneradmin\.local\bin" >> $env:GITHUB_PATH
-          # creates python version env
+          
+          $msys2_path = "C:\msys64\usr\bin;C:\msys64\mingw64\bin"
+          echo $msys2_path >> $env:GITHUB_PATH
+
           $version = "${{ matrix.python-version }}"
           $cp_version = "cp$($version -replace '\.', '')"
           Add-Content -Path $env:GITHUB_ENV -Value "python_cp_version=$cp_version"
@@ -53,6 +55,7 @@ jobs:
           install: >
             mingw-w64-x86_64-pkg-config
             mingw-w64-x86_64-zlib
+            mingw-w64-x86_64-libjpeg-turbo
 
       - name: Build wheels
         # if: matrix.os.name == 'windows-latest'
@@ -66,10 +69,7 @@ jobs:
           BUILD_THREADS: 2
         shell: cmd
         run: |
-          setx PATH "%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
           if exist C:\Strawberry rmdir /s /q C:\Strawberry
-          echo Testing if pkg-config can find zlib...
-          pkg-config --cflags --libs zlib
           echo Building wheels...
           poetry install --no-interaction --no-root --only=build
           poetry run python -m cibuildwheel --output-dir .\wheelhouse
