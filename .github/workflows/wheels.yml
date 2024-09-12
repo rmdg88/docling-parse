@@ -73,6 +73,7 @@ jobs:
           CMAKE_CXX_COMPILER: "C:/mingw64/bin/c++.exe"
           # CMAKE_GENERATOR: "MinGW Makefiles"
           CMAKE_GENERATOR: "Ninja"
+          BUILD_THREADS: 1
         shell: pwsh
         run: |
           # C:\Users\runneradmin\.local\bin\poetry install --no-interaction --no-root --only=build
