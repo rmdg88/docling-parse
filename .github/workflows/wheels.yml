@@ -35,26 +35,13 @@ jobs:
           virtualenvs-create: true
           virtualenvs-in-project: true
 
-      - name: Install dependencies
-        # if: matrix.os.name == 'windows-latest'
-        shell: pwsh
-        run: |
-          # install pkg-config
-          choco install pkgconfiglite -y
-          # choco install ninja -y
-          # choco install cmake -y
-          # install zlib
-          powershell -Command "(Invoke-WebRequest -Uri https://git.io/JnHTY -OutFile install_zlib.bat)"; ./install_zlib.bat; del install_zlib.bat
-          echo "C:\Program Files\zlib\bin" >> $env:GITHUB_PATH
-          echo "C:\Program Files\zlib\include" >> $env:GITHUB_PATH
-          echo "C:\Program Files\zlib\lib" >> $env:GITHUB_PATH
-          # adds poetry to path
-          echo "C:\Users\runneradmin\.local\bin" >> $env:GITHUB_PATH
-
       - name: Convert Python version to cpXYZ
         # if: matrix.os.name == 'windows-latest'
         shell: pwsh
         run: |
+          # adds poetry path
+          echo "C:\Users\runneradmin\.local\bin" >> $env:GITHUB_PATH
+          # creates python version env
           $version = "${{ matrix.python-version }}"
           $cp_version = "cp$($version -replace '\.', '')"
           Add-Content -Path $env:GITHUB_ENV -Value "python_cp_version=$cp_version"
@@ -73,7 +60,15 @@ jobs:
           DCMAKE_PREFIX_PATH: "C:/Program Files/zlib"
         shell: cmd
         run: |
+          # test 
           if exist C:\Strawberry rmdir /s /q C:\Strawberry
+          # install pkg-config
+          choco install pkgconfiglite -y
+          # install zlib
+          powershell -Command "(Invoke-WebRequest -Uri https://git.io/JnHTY -OutFile install_zlib.bat)"; ./install_zlib.bat; del install_zlib.bat
+          # test if pkg-config can find zlib
+          pkg-config --cflags --libs zlib
+          # build wheels
           poetry run python -m cibuildwheel --output-dir .\wheelhouse
           poetry install --no-interaction --no-root --only=build
           poetry run python -m cibuildwheel --output-dir .\wheelhouse
