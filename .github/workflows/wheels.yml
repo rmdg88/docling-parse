@@ -53,23 +53,26 @@ jobs:
           CIBW_BUILD_VERBOSITY: 3
           CIBW_ARCHS: AMD64
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
-          # CMAKE_C_COMPILER: ""
-          # CMAKE_CXX_COMPILER: ""
-          # CMAKE_GENERATOR: ""
+          CMAKE_PREFIX_PATH: "C:/Program Files/zlib"
+          PKG_CONFIG_PATH: "C:/Program Files/zlib/pkgconfig"
           BUILD_THREADS: 2
-          DCMAKE_PREFIX_PATH: "C:/Program Files/zlib"
         shell: cmd
         run: |
-          # test 
           if exist C:\Strawberry rmdir /s /q C:\Strawberry
-          # install pkg-config
+          
+          echo Installing pkg-config...
           choco install pkgconfiglite -y
-          # install zlib
+      
+          echo Installing zlib...
           powershell -Command "(Invoke-WebRequest -Uri https://git.io/JnHTY -OutFile install_zlib.bat)"; ./install_zlib.bat; del install_zlib.bat
-          # test if pkg-config can find zlib
+      
+          echo Setting PKG_CONFIG_PATH...
+          set PKG_CONFIG_PATH=C:/Program Files/zlib/pkgconfig
+      
+          echo Testing if pkg-config can find zlib...
           pkg-config --cflags --libs zlib
-          # build wheels
-          poetry run python -m cibuildwheel --output-dir .\wheelhouse
+      
+          echo Building wheels...
           poetry install --no-interaction --no-root --only=build
           poetry run python -m cibuildwheel --output-dir .\wheelhouse
 
