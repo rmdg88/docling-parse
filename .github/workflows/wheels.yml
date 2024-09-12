@@ -47,6 +47,7 @@ jobs:
           echo "C:\Program Files\zlib\include" >> $env:GITHUB_PATH
           echo "C:\Program Files\zlib\lib" >> $env:GITHUB_PATH
           echo "C:\Users\runneradmin\.local\bin" >> $env:GITHUB_PATH
+          echo "C:\Program Files\zlib" >> $env:CMAKE_PREFIX_PATH
 
       - name: Load cached venv
         id: cached-pip-wheels
