@@ -41,8 +41,7 @@ jobs:
           install: >
             mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-zlib
-            mingw-w64-x86_64-libjpeg-turbo
-            nasm
+            mingw-w64-nasm
 
       - name: Convert Python version to cpXYZ and set paths
         shell: pwsh
