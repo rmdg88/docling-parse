@@ -71,10 +71,9 @@ jobs:
           CIBW_BUILD_VERBOSITY: 3
           CIBW_ARCHS: AMD64
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
-          CMAKE_C_COMPILER: "C:/mingw64/bin/gcc.exe"
-          CMAKE_CXX_COMPILER: "C:/mingw64/bin/c++.exe"
-          CMAKE_GENERATOR: "MinGW Makefiles"
-          # CMAKE_GENERATOR: "Ninja"
+          CMAKE_C_COMPILER: ""
+          CMAKE_CXX_COMPILER: ""
+          CMAKE_GENERATOR: "Visual Studio 16 2019"
           BUILD_THREADS: 2
         shell: pwsh
         run: |
