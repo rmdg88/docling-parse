@@ -14,7 +14,7 @@ jobs:
         python-version: ["3.11"]
 
         os:
-          - name: "windows-latest"
+          - name: "windows-2022"
             platform: "windows"
             platform_id: "win_amd64"
             
@@ -43,6 +43,10 @@ jobs:
             mingw-w64-x86_64-zlib
             mingw-w64-x86_64-libjpeg-turbo
             nasm
+      - name: Add NASM to PATH
+        shell: msys2 {0}
+        run: |
+          echo "/mingw64/bin" >> $GITHUB_PATH
 
       - name: Convert Python version to cpXYZ and set paths
         shell: pwsh
