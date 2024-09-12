@@ -43,12 +43,13 @@ jobs:
             mingw-w64-x86_64-zlib
             
       - name: Set up NASM
+        shell: pwsh 
         run: |
           mkdir C:\nasm
           curl -sSL -o C:\nasm\nasm.exe https://storage.googleapis.com/grpc-build-helper/nasm-2.15.05/nasm.exe || exit 1
-          set PATH=C:\nasm;%PATH%
+          $env:PATH="C:\nasm;$env:PATH"
           nasm -v
-
+          
       - name: Convert Python version to cpXYZ and set paths
         shell: pwsh
         run: |
