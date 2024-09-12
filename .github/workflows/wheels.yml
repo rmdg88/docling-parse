@@ -66,6 +66,7 @@ jobs:
           BUILD_THREADS: 2
         shell: cmd
         run: |
+          setx PATH "%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
           if exist C:\Strawberry rmdir /s /q C:\Strawberry
           echo Testing if pkg-config can find zlib...
           pkg-config --cflags --libs zlib
