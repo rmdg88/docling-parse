@@ -50,12 +50,23 @@ jobs:
           $env:PATH="C:\nasm;$env:PATH"
           nasm -v
           
-      - name: Download external libs
-        shell: pwsh 
+      - name: Download and Extract External Libs
+        shell: pwsh
         run: |
-          mkdir D:/a/docling-parse/docling-parse/build/extlib_qpdf
-          curl -sSL -o D:/a/docling-parse/docling-parse/build/extlib_qpdf/qpdf-external-libs-bin.zip https://github.com/qpdf/external-libs/releases/download/release-2024-06-07/qpdf-external-libs-bin.zip
-          powershell -Command "Expand-Archive -Path 'D:/a/docling-parse/docling-parse/build/extlib_qpdf/qpdf-external-libs-bin.zip' -DestinationPath 'D:/a/docling-parse/docling-parse/build/extlib_qpdf'"
+          # Define paths
+          $zipPath = '.\qpdf-external-libs-bin.zip'
+          $extractPath = '.\'
+
+          # Download the zip file using curl
+          curl -sSL -o $zipPath 'https://github.com/qpdf/external-libs/releases/download/release-2024-06-07/qpdf-external-libs-bin.zip'
+
+          # Create extraction directory if it doesn't exist
+          if (-not (Test-Path $extractPath)) {
+              New-Item -Path $extractPath -ItemType Directory
+          }
+
+          # Extract the zip file
+          Expand-Archive -Path $zipPath -DestinationPath $extractPath -Force
 
       - name: Convert Python version to cpXYZ
         shell: pwsh
