@@ -61,12 +61,13 @@ jobs:
           CMAKE_LIBRARY_PATH: "C:/msys64/mingw64/lib" 
           CMAKE_INCLUDE_PATH: "C:/msys64/mingw64/include"
           CMAKE_GENERATOR: "MSYS Makefiles"
-          ASM_NASM: "C:/msys64/mingw64/bin/nasm.exe"
-          BUILD_THREADS: 1
+          BUILD_THREADS: 2
         shell: cmd
         run: |
           if exist "C:\Strawberry\" rmdir /s /q "C:\Strawberry\"
           set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin
           set PATH=%PATH%;C:\Users\runneradmin\.local\bin
+          set ASM_NASM=C:/msys64/mingw64/bin/nasm.exe
+          set CMAKE_ASM_NASM_COMPILER=C:/msys64/mingw64/bin/nasm.exe
           poetry install --no-interaction --no-root --only=build
           poetry run python -m cibuildwheel --output-dir ./wheelhouse
