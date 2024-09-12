@@ -50,8 +50,6 @@ jobs:
       - name: Convert Python version to cpXYZ and set paths
         shell: pwsh
         run: |
-          echo "C:\msys64\mingw64\bin;C:\msys64\usr\bin" >> $env:GITHUB_PATH
-          echo "C:\Users\runneradmin\.local\bin" >> $env:GITHUB_PATH
           $version = "${{ matrix.python-version }}"
           $cp_version = "cp$($version -replace '\.', '')"
           Add-Content -Path $env:GITHUB_ENV -Value "python_cp_version=$cp_version"
@@ -65,8 +63,11 @@ jobs:
           CMAKE_PREFIX_PATH: "C:/msys64/mingw64"
           PKG_CONFIG_PATH: "C:/msys64/mingw64/lib/pkgconfig"
           BUILD_THREADS: 1
+          CMAKE_GENERATOR: "MinGW Makefiles"
         shell: cmd
         run: |
-          export PATH=$HOME/.local/bin:$PATH
+          if exist "C:\Strawberry\" rmdir /s /q "C:\Strawberry\"
+          set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin
+          set PATH=%PATH%;C:\Users\runneradmin\.local\bin
           poetry install --no-interaction --no-root --only=build
           poetry run python -m cibuildwheel --output-dir ./wheelhouse
