@@ -41,12 +41,14 @@ jobs:
           install: >
             mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-zlib
+            mingw-w64-x86_64-libjpeg-turbo
+            mingw-w64-x86_64-gtk2
             
       - name: Set up NASM
         shell: pwsh 
         run: |
           mkdir C:\nasm
-          curl -sSL -o C:\nasm\nasm.exe https://storage.googleapis.com/grpc-build-helper/nasm-2.15.05/nasm.exe || exit 1
+          curl -sSL -o C:\nasm\nasm.exe https://storage.googleapis.com/grpc-build-helper/nasm-2.16.03/nasm.exe || exit 1
           $env:PATH="C:\nasm;$env:PATH"
           nasm -v
           
