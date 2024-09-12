@@ -41,7 +41,13 @@ jobs:
           install: >
             mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-zlib
-            mingw-w64-x86_64-nasm
+            
+      - name: Set up NASM
+        run: |
+          mkdir C:\nasm
+          curl -sSL -o C:\nasm\nasm.exe https://storage.googleapis.com/grpc-build-helper/nasm-2.15.05/nasm.exe || exit 1
+          set PATH=C:\nasm;%PATH%
+          nasm -v
 
       - name: Convert Python version to cpXYZ and set paths
         shell: pwsh
@@ -62,13 +68,12 @@ jobs:
           CMAKE_INCLUDE_PATH: "C:/msys64/mingw64/include"
           CMAKE_GENERATOR: "MSYS Makefiles"
           BUILD_THREADS: 1
-          ASM_NASM: "C:/msys64/mingw64/bin/nasm.exe"
+          ASM_NASM: "C:/nasm/nasm.exe"
         shell: cmd
         run: |
-          if exist "C:/msys64/mingw64/bin/nasm.exe" echo "NASM found" || echo "NASM not found"
-          if exist "C:\Strawberry\" rmdir /s /q "C:\Strawberry\"
+          rmdir /s /q "C:\Strawberry\"
           set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin
           set PATH=%PATH%;C:\Users\runneradmin\.local\bin
+          set PATH=C:\nasm;%PATH%
           poetry install --no-interaction --no-root --only=build
           poetry run python -m cibuildwheel --output-dir ./wheelhouse
-
