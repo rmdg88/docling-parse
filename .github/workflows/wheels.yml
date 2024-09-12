@@ -48,7 +48,7 @@ jobs:
         shell: pwsh 
         run: |
           mkdir C:\nasm
-          curl -sSL -o C:\nasm\nasm.exe https://storage.googleapis.com/grpc-build-helper/nasm-2.16.03/nasm.exe || exit 1
+          curl -sSL -o C:\nasm\nasm.exe https://www.nasm.us/pub/nasm/releasebuilds/2.16.03/win64/nasm-2.16.03-installer-x64.exe || exit 1
           $env:PATH="C:\nasm;$env:PATH"
           nasm -v
           
