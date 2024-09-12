@@ -53,14 +53,10 @@ jobs:
       - name: Download and Extract External Libs
         shell: pwsh
         run: |
-          # Define paths
+          mkdir D:\a\docling-parse\docling-parse
           $zipPath = '.\qpdf-external-libs-bin.zip'
-          $extractPath = '.\'
-
-          # Download the zip file using curl
+          $extractPath = 'D:\a\docling-parse\docling-parse\'
           curl -sSL -o $zipPath 'https://github.com/qpdf/external-libs/releases/download/release-2024-06-07/qpdf-external-libs-bin.zip'
-
-          # Extract the zip file
           Expand-Archive -Path $zipPath -DestinationPath $extractPath -Force
 
       - name: Convert Python version to cpXYZ
