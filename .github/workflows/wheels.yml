@@ -39,7 +39,7 @@ jobs:
         # if: matrix.os.name == 'windows-latest'
         shell: pwsh
         run: |
-          # choco install pkgconfiglite -y
+          choco install pkgconfiglite -y
           # choco install ninja -y
           # choco install cmake -y
           powershell -Command "(Invoke-WebRequest -Uri https://git.io/JnHTY -OutFile install_zlib.bat)"; ./install_zlib.bat; del install_zlib.bat
@@ -77,6 +77,7 @@ jobs:
           BUILD_THREADS: 2
         shell: cmd
         run: |
+          if exist C:\Strawberry rmdir /s /q C:\Strawberry
           poetry run python -m cibuildwheel --output-dir .\wheelhouse
           poetry install --no-interaction --no-root --only=build
           poetry run python -m cibuildwheel --output-dir .\wheelhouse
