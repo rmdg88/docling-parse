@@ -14,7 +14,7 @@ jobs:
         python-version: ["3.11"]
 
         os:
-          - name: "windows-latest"
+          - name: "windows-2019"
             platform: "windows"
             platform_id: "win_amd64"
             
