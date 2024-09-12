@@ -14,7 +14,7 @@ jobs:
         python-version: ["3.11"]
 
         os:
-          - name: "windows-2019"
+          - name: "windows-latest"
             platform: "windows"
             platform_id: "win_amd64"
             
@@ -42,6 +42,7 @@ jobs:
             mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-zlib
             mingw-w64-x86_64-libjpeg-turbo
+            nasm
 
       - name: Convert Python version to cpXYZ and set paths
         shell: pwsh
