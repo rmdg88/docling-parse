@@ -39,10 +39,8 @@ jobs:
         with:
           update: true
           install: >
-            mingw-w64-x86_64-toolchain
-            mingw-w64-x86_64-zlib
-            mingw-w64-x86_64-libjpeg-turbo
-            mingw-w64-x86_64-gtk2
+            mingw-w64-x86_64-toolchain 
+            mingw-w64-i686-toolchain
             
       - name: Set up NASM
         shell: pwsh 
@@ -52,7 +50,14 @@ jobs:
           $env:PATH="C:\nasm;$env:PATH"
           nasm -v
           
-      - name: Convert Python version to cpXYZ and set paths
+      - name: Download external libs
+        shell: pwsh 
+        run: |
+          mkdir D:/a/docling-parse/docling-parse/build/extlib_qpdf
+          curl -sSL -o D:/a/docling-parse/docling-parse/build/extlib_qpdf/qpdf-external-libs-bin.zip https://github.com/qpdf/external-libs/releases/download/release-2024-06-07/qpdf-external-libs-bin.zip
+          powershell -Command "Expand-Archive -Path 'D:/a/docling-parse/docling-parse/build/extlib_qpdf/qpdf-external-libs-bin.zip' -DestinationPath 'D:/a/docling-parse/docling-parse/build/extlib_qpdf'"
+
+      - name: Convert Python version to cpXYZ
         shell: pwsh
         run: |
           $version = "${{ matrix.python-version }}"
@@ -80,4 +85,4 @@ jobs:
           set PATH=%PATH%;C:\Users\runneradmin\.local\bin
           set PATH=C:\nasm;%PATH%
           poetry install --no-interaction --no-root --only=build
-          poetry run python -m cibuildwheel --output-dir ./wheelhouse
+          poetry run python -m cibuildwheel --output-dir .\wheelhouse
