@@ -36,6 +36,7 @@ jobs:
           virtualenvs-in-project: true
 
       - name: Install dependencies
+        # if: matrix.os.name == 'windows-latest'
         shell: pwsh
         run: |
           choco install pkgconfiglite -y
@@ -64,6 +65,7 @@ jobs:
           Add-Content -Path $env:GITHUB_ENV -Value "python_cp_version=$cp_version"
 
       - name: Build wheels
+        # if: matrix.os.name == 'windows-latest'
         env:
           CIBW_PLATFORM: windows
           CIBW_BUILD_VERBOSITY: 3
@@ -73,7 +75,7 @@ jobs:
           CMAKE_CXX_COMPILER: "C:/mingw64/bin/c++.exe"
           # CMAKE_GENERATOR: "MinGW Makefiles"
           CMAKE_GENERATOR: "Ninja"
-          BUILD_THREADS: 1
+          BUILD_THREADS: 2
         shell: pwsh
         run: |
           # C:\Users\runneradmin\.local\bin\poetry install --no-interaction --no-root --only=build
