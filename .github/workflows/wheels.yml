@@ -67,13 +67,11 @@ jobs:
           CMAKE_PREFIX_PATH: "C:/msys64/mingw64"
           PKG_CONFIG_PATH: "C:/msys64/mingw64/lib/pkgconfig"
           BUILD_THREADS: 1
-        shell: cmd
+        shell: msys2 {0}
         run: |
-          setx PATH "%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin"
-          if exist C:\Strawberry rmdir /s /q C:\Strawberry
           echo Building wheels...
           poetry install --no-interaction --no-root --only=build
-          poetry run python -m cibuildwheel --output-dir .\wheelhouse
+          poetry run python -m cibuildwheel --output-dir ./wheelhouse
 
       - name: Publish wheels (dry run)
         # if: matrix.os.name == 'windows-latest'
