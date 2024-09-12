@@ -34,7 +34,12 @@ jobs:
           version: 1.8.3
           virtualenvs-create: true
           virtualenvs-in-project: true
-          
+      - name: Install Python and Poetry in MSYS2
+        shell: msys2 {0}
+        run: |
+          curl -sSL https://install.python-poetry.org | python -
+          export PATH=$HOME/.local/bin:$PATH
+          poetry --version
       - name: Set up deps
       # if: matrix.os.name == 'windows-latest'
         uses: msys2/setup-msys2@v2
@@ -69,7 +74,7 @@ jobs:
           BUILD_THREADS: 1
         shell: msys2 {0}
         run: |
-          echo Building wheels...
+          export PATH=$HOME/.local/bin:$PATH
           poetry install --no-interaction --no-root --only=build
           poetry run python -m cibuildwheel --output-dir ./wheelhouse
 
