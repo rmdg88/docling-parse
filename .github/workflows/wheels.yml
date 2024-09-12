@@ -14,8 +14,8 @@ jobs:
         python-version: ["3.11"]
 
         os:
-          # - name: "windows-latest"
-          - name: "windows-2019"
+          - name: "windows-latest"
+          # - name: "windows-2019"
             platform: "windows"
             platform_id: "win_amd64"
             
@@ -34,21 +34,9 @@ jobs:
           version: 1.8.3
           virtualenvs-create: true
           virtualenvs-in-project: true
-
-      - name: Convert Python version to cpXYZ and set paths
-        # if: matrix.os.name == 'windows-latest'
-        shell: pwsh
-        run: |
-          echo "C:\Users\runneradmin\.local\bin" >> $env:GITHUB_PATH
           
-          $msys2_path = "C:\msys64\usr\bin;C:\msys64\mingw64\bin"
-          echo $msys2_path >> $env:GITHUB_PATH
-
-          $version = "${{ matrix.python-version }}"
-          $cp_version = "cp$($version -replace '\.', '')"
-          Add-Content -Path $env:GITHUB_ENV -Value "python_cp_version=$cp_version"
-
-      - name: Set up MSYS2 deps
+      - name: Set up deps
+      # if: matrix.os.name == 'windows-latest'
         uses: msys2/setup-msys2@v2
         with:
           update: true
@@ -56,6 +44,19 @@ jobs:
             mingw-w64-x86_64-pkg-config
             mingw-w64-x86_64-zlib
             mingw-w64-x86_64-libjpeg-turbo
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
+            mingw-w64-x86_64-make
+            
+      - name: Convert Python version to cpXYZ and set paths
+        # if: matrix.os.name == 'windows-latest'
+        shell: pwsh
+        run: |
+          echo "C:\Users\runneradmin\.local\bin" >> $env:GITHUB_PATH
+          echo "C:\msys64\usr\bin;C:\msys64\mingw64\bin" >> $env:GITHUB_PATH
+          $version = "${{ matrix.python-version }}"
+          $cp_version = "cp$($version -replace '\.', '')"
+          Add-Content -Path $env:GITHUB_ENV -Value "python_cp_version=$cp_version"
 
       - name: Build wheels
         # if: matrix.os.name == 'windows-latest'
