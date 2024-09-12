@@ -39,23 +39,17 @@ jobs:
         # if: matrix.os.name == 'windows-latest'
         shell: pwsh
         run: |
+          # install pkg-config
           choco install pkgconfiglite -y
           # choco install ninja -y
           # choco install cmake -y
+          # install zlib
           powershell -Command "(Invoke-WebRequest -Uri https://git.io/JnHTY -OutFile install_zlib.bat)"; ./install_zlib.bat; del install_zlib.bat
           echo "C:\Program Files\zlib\bin" >> $env:GITHUB_PATH
           echo "C:\Program Files\zlib\include" >> $env:GITHUB_PATH
           echo "C:\Program Files\zlib\lib" >> $env:GITHUB_PATH
+          # adds poetry to path
           echo "C:\Users\runneradmin\.local\bin" >> $env:GITHUB_PATH
-          echo "C:\Program Files\zlib" >> $env:CMAKE_PREFIX_PATH
-
-      - name: Load cached venv
-        id: cached-pip-wheels
-        uses: actions/cache@v4
-        with:
-          # Set the path based on the operating system
-          path: ${{ runner.os == 'Windows' && 'C:\\Users\\runneradmin\\AppData\\Local\\pypa\\cibuildwheel\\Cache' || '~/.cache' }}
-          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
       - name: Convert Python version to cpXYZ
         # if: matrix.os.name == 'windows-latest'
@@ -72,10 +66,11 @@ jobs:
           CIBW_BUILD_VERBOSITY: 3
           CIBW_ARCHS: AMD64
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
-          CMAKE_C_COMPILER: ""
-          CMAKE_CXX_COMPILER: ""
-          CMAKE_GENERATOR: ""
+          # CMAKE_C_COMPILER: ""
+          # CMAKE_CXX_COMPILER: ""
+          # CMAKE_GENERATOR: ""
           BUILD_THREADS: 2
+          DCMAKE_PREFIX_PATH: "C:/Program Files/zlib"
         shell: cmd
         run: |
           if exist C:\Strawberry rmdir /s /q C:\Strawberry
@@ -85,7 +80,7 @@ jobs:
 
       - name: Publish wheels (dry run)
         # if: matrix.os.name == 'windows-latest'
-        shell: pwsh
+        shell: cmd
         run: |
-          ls -l .\dist
+          dir .\dist
           poetry publish --dry-run --no-interaction -vvv
