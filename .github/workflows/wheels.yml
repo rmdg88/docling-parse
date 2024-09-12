@@ -47,14 +47,7 @@ jobs:
           echo "C:\Program Files\zlib\include" >> $env:GITHUB_PATH
           echo "C:\Program Files\zlib\lib" >> $env:GITHUB_PATH
           echo "C:\Users\runneradmin\.local\bin" >> $env:GITHUB_PATH
-          
-      - name: Set up the MSVC environment for 64-bit builds
-        # if: matrix.os.name == 'windows-latest'
-        shell: cmd
-        run: |
-          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          build.bat
-          
+
       - name: Load cached venv
         id: cached-pip-wheels
         uses: actions/cache@v4
@@ -82,20 +75,13 @@ jobs:
           CMAKE_CXX_COMPILER: ""
           CMAKE_GENERATOR: "Visual Studio 16 2019"
           BUILD_THREADS: 2
-        shell: pwsh
+        shell: cmd
         run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           poetry run python -m cibuildwheel --output-dir .\wheelhouse
           poetry install --no-interaction --no-root --only=build
           poetry run python -m cibuildwheel --output-dir .\wheelhouse
-          Get-ChildItem -Path .\wheelhouse\*.whl | ForEach-Object {
-            Write-Output "Inspecting $($_.FullName)"
-            poetry run python -m zipfile --list $_.FullName
-          }
-          if (-not (Test-Path -Path .\dist)) {
-            New-Item -Path .\dist -ItemType Directory
-          }
-          Copy-Item -Path .\wheelhouse\*.whl -Destination .\dist\
-          
+
       - name: Publish wheels (dry run)
         # if: matrix.os.name == 'windows-latest'
         shell: pwsh
