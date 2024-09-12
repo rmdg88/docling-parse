@@ -53,10 +53,9 @@ jobs:
       - name: Download and Extract External Libs
         shell: pwsh
         run: |
-          $zipPath = '.\qpdf-external-libs-bin.zip'
-          $extractPath = 'D:\a\docling-parse\docling-parse\'
-          curl -sSL -o $zipPath 'https://github.com/qpdf/external-libs/releases/download/release-2024-06-07/qpdf-external-libs-bin.zip'
-          Expand-Archive -Path $zipPath -DestinationPath $extractPath -Force
+          curl -sSL -o D:\a\docling-parse\docling-parse\qpdf-external-libs-bin.zip https://github.com/qpdf/external-libs/releases/download/release-2024-06-07/qpdf-external-libs-bin.zip
+          powershell -Command "Expand-Archive -Path 'D:\a\docling-parse\docling-parse\qpdf-external-libs-bin.zip' -DestinationPath 'D:\a\docling-parse\docling-parse' -Force"
+          dir D:\a\docling-parse\docling-parse /s
 
       - name: Convert Python version to cpXYZ
         shell: pwsh
