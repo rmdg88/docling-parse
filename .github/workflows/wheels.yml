@@ -40,8 +40,8 @@ jobs:
         shell: pwsh
         run: |
           choco install pkgconfiglite -y
-          choco install ninja -y
-          choco install cmake -y
+          # choco install ninja -y
+          # choco install cmake -y
           powershell -Command "(Invoke-WebRequest -Uri https://git.io/JnHTY -OutFile install_zlib.bat)"; ./install_zlib.bat; del install_zlib.bat
           echo "C:\Program Files\zlib\bin" >> $env:GITHUB_PATH
           echo "C:\Program Files\zlib\include" >> $env:GITHUB_PATH
@@ -85,18 +85,6 @@ jobs:
           # Build the wheels
           poetry run python -m cibuildwheel --output-dir .\wheelhouse
     
-          # Inspect the wheels
-          Get-ChildItem -Path .\wheelhouse\*.whl | ForEach-Object {
-            Write-Output "Inspecting $($_.FullName)"
-            poetry run python -m zipfile --list $_.FullName
-          }
-    
-          # Create the dist folder if it doesn't exist and move the wheels there
-          if (-not (Test-Path -Path .\dist)) {
-            New-Item -Path .\dist -ItemType Directory
-          }
-          Copy-Item -Path .\wheelhouse\*.whl -Destination .\dist\
-
       - name: Publish wheels (dry run)
         # if: matrix.os.name == 'windows-latest'
         shell: pwsh
