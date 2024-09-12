@@ -73,11 +73,11 @@ jobs:
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
           CMAKE_C_COMPILER: ""
           CMAKE_CXX_COMPILER: ""
-          CMAKE_GENERATOR: "Visual Studio 16 2019"
+          # CMAKE_GENERATOR: "Visual Studio 16 2019"
           BUILD_THREADS: 2
         shell: cmd
         run: |
-          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          # call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           poetry run python -m cibuildwheel --output-dir .\wheelhouse
           poetry install --no-interaction --no-root --only=build
           poetry run python -m cibuildwheel --output-dir .\wheelhouse
