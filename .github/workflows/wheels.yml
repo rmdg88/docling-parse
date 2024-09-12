@@ -61,7 +61,7 @@ jobs:
           CMAKE_LIBRARY_PATH: "C:/msys64/mingw64/lib" 
           CMAKE_INCLUDE_PATH: "C:/msys64/mingw64/include"
           CMAKE_GENERATOR: "MSYS Makefiles"
-          CMAKE_ASM_NASM_COMPILER: "C:/msys64/mingw64/bin/nasm.exe"
+          ASM_NASM: "C:/msys64/mingw64/bin/nasm.exe"
           BUILD_THREADS: 1
         shell: cmd
         run: |
