@@ -44,7 +44,6 @@ jobs:
             mingw-w64-x86_64-libjpeg-turbo
             mingw-w64-x86_64-cmake
             mingw-w64-x86_64-make
-            mingw-w64-x86_64-random
             mingw-w64-x86_64-boost
 
       - name: Convert Python version to cpXYZ and set paths
