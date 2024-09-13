@@ -5,10 +5,7 @@ include(ExternalProject)
 include(CMakeParseArguments)
 
 set(QPDF_URL https://github.com/qpdf/qpdf.git)
-set(QPDF_TAG v11.9.1)
-
-# Define the path where external libs are located
-set(EXTERNALS_PREFIX_PATH "${CMAKE_SOURCE_DIR}/external-libs")
+set(QPDF_TAG v11.9.1 )
 
 if(UNIX)
   set(QPDF_EXTRA_CXX_FLAGS "-fPIC ")
@@ -20,12 +17,18 @@ endif()
 
 ExternalProject_Add(extlib_qpdf
     PREFIX extlib_qpdf
+
     DEPENDS extlib_jpeg
+
     UPDATE_COMMAND ""
+
     GIT_REPOSITORY ${QPDF_URL}
     GIT_TAG        ${QPDF_TAG}
+    
     BUILD_ALWAYS OFF
+
     INSTALL_DIR ${EXTERNALS_PREFIX_PATH}
+
 
     CMAKE_ARGS \\
     -DCMAKE_POSITION_INDEPENDENT_CODE=ON \\
@@ -51,11 +54,11 @@ ExternalProject_Add(extlib_qpdf
     -DBUILD_DOC_DIST=OFF \\
     -DCMAKE_INSTALL_LIBDIR=${EXTERNALS_PREFIX_PATH}/lib \\
     -DCMAKE_INSTALL_PREFIX=${EXTERNALS_PREFIX_PATH}
-
+    
     LOG_DOWNLOAD ON
     # LOG_CONFIGURE ON
     # LOG_BUILD ON
-)
+  )
 
 add_library(qpdf STATIC IMPORTED)
 set_target_properties(qpdf PROPERTIES IMPORTED_LOCATION ${EXTERNALS_PREFIX_PATH}/lib/libqpdf.a)
