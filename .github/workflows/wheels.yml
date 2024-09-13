@@ -42,12 +42,34 @@ jobs:
             mingw-w64-x86_64-toolchain 
             mingw-w64-i686-toolchain
             
-      - name: Set up NASM
-        shell: pwsh 
+      - name: Set up QPDF external-libs
+        shell: pwsh
         run: |
-          mkdir C:\nasm
-          curl -sSL -o C:\nasm\nasm.exe https://fossies.org/windows/misc/nasm-2.16.03-win64.zip/nasm-2.16.03/nasm.exe || exit 1
-          $env:PATH="C:\nasm;$env:PATH"
+          # Create the directory for external libs
+          New-Item -Path 'C:\windows-libs' -ItemType Directory -Force
+          
+          # Download the ZIP file
+          Invoke-WebRequest -Uri 'https://github.com/qpdf/external-libs/releases/download/release-2024-06-07/qpdf-external-libs-bin.zip' -OutFile 'C:\windows-libs\qpdf-external-libs-bin.zip'
+          
+          # Unzip the downloaded file
+          Expand-Archive -Path 'C:\windows-libs\qpdf-external-libs-bin.zip' -DestinationPath 'C:\windows-libs' -Force
+          
+          # List contents of the directory for verification
+          Get-ChildItem -Path 'C:\windows-libs' -Recurse
+          
+      - name: Set up NASM
+        shell: pwsh
+        run: |
+          # Create the directory for NASM
+          New-Item -Path 'C:\nasm' -ItemType Directory -Force
+          
+          # Download NASM executable
+          Invoke-WebRequest -Uri 'https://fossies.org/windows/misc/nasm-2.16.03-win64.zip/nasm-2.16.03/nasm.exe' -OutFile 'C:\nasm\nasm.exe'
+          
+          # Update PATH environment variable
+          $env:PATH = "C:\nasm;$env:PATH"
+          
+          # Verify NASM installation
           nasm -v
 
       - name: Convert Python version to cpXYZ
@@ -65,9 +87,9 @@ jobs:
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
           PKG_CONFIG_PATH: "C:/msys64/mingw64/lib/pkgconfig"
           PKG_CONFIG_EXECUTABLE: "C:/msys64/usr/bin/pkg-config.exe"
-          CMAKE_PREFIX_PATH: "C:/msys64/mingw64;D:/a/docling-parse/docling-parse/windows-libs/external-libs"
-          CMAKE_LIBRARY_PATH: "C:/msys64/mingw64/lib;D:/a/docling-parse/docling-parse/windows-libs/external-libs/lib-mingw64"
-          CMAKE_INCLUDE_PATH: "C:/msys64/mingw64/include;D:/a/docling-parse/docling-parse/windows-libs/external-libs/include"
+          CMAKE_PREFIX_PATH: "C:/msys64/mingw64;C:/windows-libs/external-libs"
+          CMAKE_LIBRARY_PATH: "C:/msys64/mingw64/lib;C:/windows-libs/external-libs/lib-mingw64"
+          CMAKE_INCLUDE_PATH: "C:/msys64/mingw64/include;C:/windows-libs/external-libs/include"
           CMAKE_GENERATOR: "MSYS Makefiles"
           BUILD_THREADS: 1
           ASM_NASM: "C:/nasm/nasm.exe"
@@ -78,6 +100,6 @@ jobs:
           set PATH=%PATH%;C:\Users\runneradmin\.local\bin
           set PATH=C:\nasm;%PATH%
           # Pass in zlib and jpeg paths explicitly
-          set CMAKE_ARGS=-DZLIB_LIBRARY=D:/a/docling-parse/docling-parse/windows-libs/external-libs/lib-mingw64/libz.a -DZLIB_INCLUDE_DIR=D:/a/docling-parse/docling-parse/windows-libs/external-libs/include -DJPEG_LIBRARY=D:/a/docling-parse/docling-parse/windows-libs/external-libs/lib-mingw64/libjpeg.a -DJPEG_INCLUDE_DIR=D:/a/docling-parse/docling-parse/windows-libs/external-libs/include
+          set CMAKE_ARGS=-DZLIB_LIBRARY=C:/windows-libs/external-libs/lib-mingw64/libz.a -DZLIB_INCLUDE_DIR=C:/windows-libs/external-libs/include -DJPEG_LIBRARY=C:/windows-libs/external-libs/lib-mingw64/libjpeg.a -DJPEG_INCLUDE_DIR=C:/windows-libs/external-libs/include
           poetry install --no-interaction --no-root --only=build
           poetry run python -m cibuildwheel --output-dir .\wheelhouse
