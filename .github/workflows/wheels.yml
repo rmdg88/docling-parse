@@ -57,7 +57,7 @@ jobs:
           # List contents of the directory for verification
           Get-ChildItem -Path 'C:\windows-libs' -Recurse
           
-      - name: Set up NASM
+      - name: Set up NASM assembler 
         shell: pwsh
         run: |
           # Create the directory for NASM
