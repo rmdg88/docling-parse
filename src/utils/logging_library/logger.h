@@ -201,8 +201,19 @@ namespace logging_lib {
       std::time_t t = std::chrono::system_clock::to_time_t(time);
 
       struct tm * timeinfo;
-      timeinfo = localtime(&t);
-      strftime(buffer,32,"%F %T", timeinfo);
+      // timeinfo = localtime(&t);
+        #ifdef _WIN32
+            localtime_s(&timeinfo, &t);  // Thread-safe version on Windows
+        #else
+            localtime_r(&t, &timeinfo);  // POSIX thread-safe version
+        #endif
+      // strftime(buffer,32,"%F %T", timeinfo);
+      #ifdef _WIN32
+          strftime(buffer, 32, "%Y-%m-%d %H:%M:%S", timeinfo);  // Windows equivalent
+      #else
+          strftime(buffer, 32, "%F %T", timeinfo);  // POSIX
+      #endif
+
 
       stream << buffer << " [" << std::setw(7) << to_string(type) << "] " << string << std::endl;
     };
