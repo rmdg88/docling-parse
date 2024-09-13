@@ -187,37 +187,40 @@ namespace logging_lib {
   }
 
   std::function<void(std::string, logging_level_type)> Logger::to_file(std::string filename, bool append)
-  {
+{
     static std::map<std::string, std::ofstream> streams;
     static char buffer[32];
 
-    if(not streams.count(filename))
-      streams[filename].open(filename, append ? std::ios::app : std::ios::out);
+    if (!streams.count(filename))
+        streams[filename].open(filename, append ? std::ios::app : std::ios::out);
 
-    std::ofstream & stream = streams[filename];
-    return [&](std::string string, logging_level_type type) { 
-      
-      auto time = std::chrono::system_clock::now();
-      std::time_t t = std::chrono::system_clock::to_time_t(time);
+    std::ofstream &stream = streams[filename];
 
-      struct tm * timeinfo;
-      // timeinfo = localtime(&t);
+    return [&](std::string string, logging_level_type type) {
+        auto time = std::chrono::system_clock::now();
+        std::time_t t = std::chrono::system_clock::to_time_t(time);
+
+        struct tm timeinfo;  // Declare the timeinfo struct
+
+        // Use thread-safe localtime functions
         #ifdef _WIN32
-            localtime_s(&timeinfo, &t);  // Thread-safe version on Windows
+            localtime_s(&timeinfo, &t);  // Pass a pointer to timeinfo
         #else
-            localtime_r(&t, &timeinfo);  // POSIX thread-safe version
+            localtime_r(&t, &timeinfo);  // Pass a pointer to timeinfo
         #endif
-      // strftime(buffer,32,"%F %T", timeinfo);
-      #ifdef _WIN32
-          strftime(buffer, 32, "%Y-%m-%d %H:%M:%S", timeinfo);  // Windows equivalent
-      #else
-          strftime(buffer, 32, "%F %T", timeinfo);  // POSIX
-      #endif
 
+        // Format the time into a string
+        #ifdef _WIN32
+            strftime(buffer, 32, "%Y-%m-%d %H:%M:%S", &timeinfo);  // Windows equivalent
+        #else
+            strftime(buffer, 32, "%F %T", &timeinfo);  // POSIX
+        #endif
 
-      stream << buffer << " [" << std::setw(7) << to_string(type) << "] " << string << std::endl;
+        // Write the log message with a timestamp
+        stream << buffer << " [" << std::setw(7) << to_string(type) << "] " << string << std::endl;
     };
-  }
+}
+
 
   void Logger::warn(std::string str, std::string domain)
   {
