@@ -65,9 +65,9 @@ jobs:
           CIBW_PROJECT_REQUIRES_PYTHON: "~=${{ matrix.python-version }}.0"
           PKG_CONFIG_PATH: "C:/msys64/mingw64/lib/pkgconfig"
           PKG_CONFIG_EXECUTABLE: "C:/msys64/usr/bin/pkg-config.exe"
-          CMAKE_PREFIX_PATH: "C:/msys64/mingw64;D:/a/docling-parse/docling-parse/external-libs"
-          CMAKE_LIBRARY_PATH: "C:/msys64/mingw64/lib;D:/a/docling-parse/docling-parse/external-libs/lib-mingw64"
-          CMAKE_INCLUDE_PATH: "C:/msys64/mingw64/include;D:/a/docling-parse/docling-parse/external-libs/include"
+          CMAKE_PREFIX_PATH: "C:/msys64/mingw64"
+          CMAKE_LIBRARY_PATH: "C:/msys64/mingw64/lib"
+          CMAKE_INCLUDE_PATH: "C:/msys64/mingw64/include"
           CMAKE_GENERATOR: "MSYS Makefiles"
           BUILD_THREADS: 1
           ASM_NASM: "C:/nasm/nasm.exe"
@@ -77,7 +77,5 @@ jobs:
           set PATH=%PATH%;C:\msys64\usr\bin;C:\msys64\mingw64\bin
           set PATH=%PATH%;C:\Users\runneradmin\.local\bin
           set PATH=C:\nasm;%PATH%
-          set CMAKE_ARGS=-DZLIB_LIBRARY=D:/a/docling-parse/docling-parse/external-libs/lib-mingw64/zlib.a -DZLIB_INCLUDE_DIR=D:/a/docling-parse/docling-parse/external-libs/include -DJPEG_LIBRARY=D:/a/docling-parse/docling-parse/external-libs/lib-mingw64/jpeg.a -DJPEG_INCLUDE_DIR=D:/a/docling-parse/docling-parse/external-libs/include
           poetry install --no-interaction --no-root --only=build
           poetry run python -m cibuildwheel --output-dir .\wheelhouse
-
