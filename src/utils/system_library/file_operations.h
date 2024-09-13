@@ -25,6 +25,7 @@ Date: 07/02/2019
 #include "system_library.h"
 #endif // __CGCR_PER_HEADER_INCLUSION_ENABLED
 
+
 namespace system_lib
 {
   /*********************************
@@ -101,16 +102,15 @@ namespace system_lib
   //   return true;
   // }
 
-  bool system_lib::file_operations::is_file(std::string file_name)
-  {
+  bool file_operations::is_file(std::string file_name) {
       struct stat st;
 
       #ifdef _WIN32
           if (_stat(file_name.c_str(), &st) == 0) {
-              return (st.st_mode & S_IFREG) != 0;  // Check if it's a regular file
+              return (st.st_mode & _S_IFREG) != 0;  // Check if it's a regular file
           }
       #else
-          if (lstat(file_name.c_str(), &st) == 0) {
+          if (stat(file_name.c_str(), &st) == 0) {
               return S_ISREG(st.st_mode);  // POSIX check for regular file
           }
       #endif
@@ -141,7 +141,7 @@ namespace system_lib
 
   //   return false;
   // }
-  
+
   bool system_lib::file_operations::is_directory(std::string dir_name)
   {
       struct stat st;
