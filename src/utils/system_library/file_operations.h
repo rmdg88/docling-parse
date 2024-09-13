@@ -90,15 +90,32 @@ namespace system_lib
     return true;
   }
 
-  bool file_operations::is_file(std::string file_name)
+  // bool file_operations::is_file(std::string file_name)
+  // {
+  //   struct stat st;
+  //   lstat(file_name.c_str(), &st);
+
+  //   if (S_ISDIR(st.st_mode))
+  //     return false;
+
+  //   return true;
+  // }
+
+  bool system_lib::file_operations::is_file(std::string file_name)
   {
-    struct stat st;
-    lstat(file_name.c_str(), &st);
+      struct stat st;
 
-    if (S_ISDIR(st.st_mode))
+      #ifdef _WIN32
+          if (_stat(file_name.c_str(), &st) == 0) {
+              return (st.st_mode & S_IFREG) != 0;  // Check if it's a regular file
+          }
+      #else
+          if (lstat(file_name.c_str(), &st) == 0) {
+              return S_ISREG(st.st_mode);  // POSIX check for regular file
+          }
+      #endif
+
       return false;
-
-    return true;
   }
 
   bool file_operations::delete_file(std::string file_name)
@@ -114,17 +131,33 @@ namespace system_lib
       }
   }
 
-  bool file_operations::is_directory(std::string dir_name)
+  // bool file_operations::is_directory(std::string dir_name)
+  // {
+  //   struct stat st;
+  //   lstat(dir_name.c_str(), &st);
+
+  //   if (S_ISDIR(st.st_mode))
+  //     return true;
+
+  //   return false;
+  // }
+  
+  bool system_lib::file_operations::is_directory(std::string dir_name)
   {
-    struct stat st;
-    lstat(dir_name.c_str(), &st);
+      struct stat st;
 
-    if (S_ISDIR(st.st_mode))
-      return true;
+      #ifdef _WIN32
+          if (_stat(dir_name.c_str(), &st) == 0) {
+              return (st.st_mode & S_IFDIR) != 0;  // Check if it's a directory
+          }
+      #else
+          if (lstat(dir_name.c_str(), &st) == 0) {
+              return S_ISDIR(st.st_mode);  // POSIX check for directory
+          }
+      #endif
 
-    return false;
+      return false;
   }
-
   bool file_operations::create_directory(std::string dir_name) noexcept
   {
 
