@@ -66,7 +66,7 @@ jobs:
           PKG_CONFIG_PATH: "C:/msys64/mingw64/lib/pkgconfig"
           PKG_CONFIG_EXECUTABLE: "C:/msys64/usr/bin/pkg-config.exe"
           CMAKE_PREFIX_PATH: "C:/msys64/mingw64;D:/a/docling-parse/docling-parse/external-libs"
-          CMAKE_LIBRARY_PATH: "C:/msys64/mingw64/lib;D:/a/docling-parse/docling-parse/external-libs/lib"
+          CMAKE_LIBRARY_PATH: "C:/msys64/mingw64/lib;D:/a/docling-parse/docling-parse/external-libs/lib-mingw64"
           CMAKE_INCLUDE_PATH: "C:/msys64/mingw64/include;D:/a/docling-parse/docling-parse/external-libs/include"
           CMAKE_GENERATOR: "MSYS Makefiles"
           BUILD_THREADS: 1
