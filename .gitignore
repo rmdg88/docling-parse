@@ -1,5 +1,5 @@
 *~
-externals
+# externals
 build
 dist
 extlib_*/
